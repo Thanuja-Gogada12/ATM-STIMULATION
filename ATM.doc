@@ -1,0 +1,126 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class ATM {
+    private double balance;
+    private String pin;
+    private ArrayList<String> transactionHistory;
+
+    public ATM(double initialBalance, String initialPin) {
+        balance = initialBalance;
+        pin = initialPin;
+        transactionHistory = new ArrayList<>();
+    }
+
+    // Method to check account balance
+    public double checkBalance() {
+        return balance;
+    }
+
+    // Method to withdraw cash
+    public boolean withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            transactionHistory.add("Withdrawal: $" + amount);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Method to deposit cash
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            transactionHistory.add("Deposit: $" + amount);
+        }
+    }
+
+    // Method to change PIN
+    public boolean changePin(String oldPin, String newPin) {
+        if (pin.equals(oldPin)) {
+            pin = newPin;
+            transactionHistory.add("PIN changed");
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Method to get transaction history
+    public ArrayList<String> getTransactionHistory() {
+        return transactionHistory;
+    }
+}
+
+public class ATMSimulation {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        ATM atm = new ATM(1000.0, "1234"); // Initial balance and PIN
+
+        System.out.println("Welcome to the ATM Machine!");
+
+        while (true) {
+            System.out.println("\nPlease choose an option:");
+            System.out.println("1. Check Balance");
+            System.out.println("2. Withdraw Cash");
+            System.out.println("3. Deposit Cash");
+            System.out.println("4. Change PIN");
+            System.out.println("5. Transaction History");
+            System.out.println("6. Exit");
+
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.println("Your current balance is: $" + atm.checkBalance());
+                    break;
+
+                case 2:
+                    System.out.print("Enter the amount to withdraw: ");
+                    double withdrawAmount = scanner.nextDouble();
+                    if (atm.withdraw(withdrawAmount)) {
+                        System.out.println("Please collect your cash.");
+                    } else {
+                        System.out.println("Insufficient funds or invalid amount.");
+                    }
+                    break;
+
+                case 3:
+                    System.out.print("Enter the amount to deposit: ");
+                    double depositAmount = scanner.nextDouble();
+                    atm.deposit(depositAmount);
+                    System.out.println("Your amount has been deposited.");
+                    break;
+
+                case 4:
+                    System.out.print("Enter your old PIN: ");
+                    String oldPin = scanner.next();
+                    System.out.print("Enter your new PIN: ");
+                    String newPin = scanner.next();
+                    if (atm.changePin(oldPin, newPin)) {
+                        System.out.println("Your PIN has been changed successfully.");
+                    } else {
+                        System.out.println("Incorrect old PIN.");
+                    }
+                    break;
+
+                case 5:
+                    System.out.println("Transaction History:");
+                    for (String transaction : atm.getTransactionHistory()) {
+                        System.out.println(transaction);
+                    }
+                    break;
+
+                case 6:
+                    System.out.println("Thank you for using the ATM. Goodbye!");
+                    scanner.close();
+                    return;
+
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+                    break;
+            }
+        }
+    }
+}
